@@ -1,19 +1,31 @@
 import mongoose from "mongoose";
 
 const NewUserSchema = new mongoose.Schema({
-    name: {
+    fullName: {
         type: String,
-        required: true
+        index:true,
+        required: true,
+        trim: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        lowercase: true
+        lowercase: true,
+        trim: true,
+        index: true,
+        match: [
+            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+            "Please enter a valid email",
+        ],
     },
     password: {
         type: String,
-        required: true,
+        required: function () {
+            return !this.isGoogleUser;
+        },
+        minLength: 8,
+        select: false, // Security: Query mein password default nahi aayega
     },
     role: {
         type: String,
