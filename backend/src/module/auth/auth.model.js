@@ -34,6 +34,11 @@ const NewUserSchema = new mongoose.Schema({
         required: true
     },
 
+    isGoogleUser: {
+        type: Boolean,
+        default: false,
+    },
+
     companyName: {
         type: String,
         required: function () {

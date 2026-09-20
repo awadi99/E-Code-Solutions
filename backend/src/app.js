@@ -1,9 +1,12 @@
 import express from 'express';
 import cors from "cors";
-import { connectionDb } from './config/db.js';
+import passport from 'passport';
 import authRoutes from "./module/auth/auth.router.js";
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import "./module/auth/google.strategy.js";
+
+
 dotenv.config();
 
 
@@ -30,6 +33,7 @@ app.use(cors({
 
 app.use(express.json({ limit: "25mb" })); // increase limit to allow base64 images
 app.use(cookieParser());
+app.use(passport.initialize());
 
 app.get("/", (req, res) => {
     res.send("API is running");
