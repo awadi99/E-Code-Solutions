@@ -11,7 +11,7 @@ import {
     Recycle,
 } from "lucide-react";
 
-export function SignIn() {
+export function Login() {
     const navigate = useNavigate();
 
     const [data, setData] = useState({
@@ -98,8 +98,8 @@ export function SignIn() {
                             to="/"
                             className="inline-flex items-center gap-3"
                         >
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#064e3b] text-green-300">
-                                <Recycle size={19} />
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#064e3b] text-green-300">
+                                <img src="/image/logo.png" className="h-9 w-9" alt="" />
                             </div>
 
                             <span className="text-sm font-black tracking-wide text-[#064e3b]">
@@ -220,22 +220,22 @@ export function SignIn() {
 
                             {/* Terms */}
 
-                            <label className="flex cursor-pointer items-start gap-3 text-sm text-gray-500">
+                            <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
 
                                 <input
                                     type="checkbox"
-                                    required
-                                    className="mt-0.5 h-4 w-4 accent-green-600"
+                                    className="mt-1 h-4 w-4 accent-green-600"
                                 />
 
-                                <span className="leading-6">
+                                <span className="text-xs leading-5 text-slate-500">
                                     I agree to the{" "}
                                     <a
-                                        href="#"
+                                        href="/toc"
                                         className="font-semibold text-[#064e3b] underline underline-offset-2"
                                     >
                                         Terms and Conditions
                                     </a>
+                                    .
                                 </span>
 
                             </label>
@@ -276,7 +276,7 @@ export function SignIn() {
                                 Not registered?
 
                                 <Link
-                                    to="/sign-up"
+                                    to="/register"
                                     className="ml-1 font-bold text-[#064e3b] transition hover:text-green-600"
                                 >
                                     Create account
@@ -375,5 +375,4 @@ export function SignIn() {
         </main>
     );
 }
-
-export default SignIn;
+export default Login;

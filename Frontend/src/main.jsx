@@ -2,19 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
-// import { ThemeProvider } from "@material-tailwind/react";
-import "./styles/index.css"
-import { Provider } from "react-redux";
-import store from './redux/store.js'
+import {QueryClientProvider,QueryClient} from "@tanstack/react-query";
 
+import "./styles/index.css"
+
+
+const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
     <BrowserRouter>
-      {/* <ThemeProvider> */}
-        <Provider store={store}>
         <App />
-        </Provider>
-      {/* </ThemeProvider> */}
     </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>
 );

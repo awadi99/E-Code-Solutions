@@ -224,7 +224,7 @@ export default function Navbar() {
                             scale: 0.97,
                         }}
                         onClick={() =>
-                            navigate("/sign-up")
+                            navigate("/register")
                         }
                         className="
                             hidden sm:flex

@@ -1,13 +1,15 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Loading from "./components/common/Loading";
+import TOC from "./pages/TOC.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
 
 // Lazy loaded pages
 const LandingPage = lazy(() => import("./pages/LandingPage"));
-const SignIn = lazy(() => import("./pages/SignIn"));
-const SignUp = lazy(() => import("./pages/SignUp"));
+const Login = lazy(() => import("./pages/Login.jsx"));
+const Register = lazy(() => import("./pages/Register.jsx"));
 const Docs = lazy(() => import("./pages/Docs"));
-// const Items = lazy(() => import("./pages/Items"));
+const Items = lazy(() => import("./pages/Items"));
 // const AddProducts = lazy(() => import("./pages/AddProducts"));
 // const Store = lazy(() => import("./pages/Store"));
 // const Invoice = lazy(() => import("./pages/Invoice"));
@@ -15,11 +17,11 @@ const Docs = lazy(() => import("./pages/Docs"));
 export default function App() {
     return (
         <Suspense
-        fallback={
-          <div className="flex min-h-screen flex-col items-center justify-center bg-black">
-            <Loading/>
-          </div>
-      }
+            fallback={
+                <div className="flex min-h-screen flex-col items-center justify-center bg-black">
+                    <Loading />
+                </div>
+            }
         >
             <Routes>
 
@@ -31,13 +33,13 @@ export default function App() {
 
                 {/* Authentication */}
                 <Route
-                    path="/sign-in"
-                    element={<SignIn />}
+                    path="/login"
+                    element={<Login />}
                 />
 
                 <Route
-                    path="/sign-up"
-                    element={<SignUp />}
+                    path="/register"
+                    element={<Register />}
                 />
 
                 {/* User */}
@@ -71,6 +73,17 @@ export default function App() {
                     path="/invoice"
                     element={<Invoice />}
                 /> */}
+
+                <Route
+                path="/toc"
+                element={<TOC/>}
+                />
+
+                <Route
+                path ="/pp"
+                element={<PrivacyPolicy/>}
+                />
+
 
                 {/* Unknown URL → Home */}
                 <Route

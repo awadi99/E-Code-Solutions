@@ -37,9 +37,8 @@ const SOCIAL_LINKS = [
 
 const EXPLORE_LINKS = [
     { name: "Home", path: "/" },
-    { name: "Products", path: "/items" },
-    { name: "Privacy Policy", path: "/privacy-policy" },
-    { name: "Terms & Conditions", path: "/terms-and-conditions" },
+    { name: "Privacy Policy", path: "/pp" },
+    { name: "Terms & Conditions", path: "/toc" },
 ];
 
 export default function Footer() {
@@ -69,7 +68,7 @@ export default function Footer() {
                             <div className="flex items-center gap-4">
 
                                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black/20 text-[#052e23] shadow-sm">
-                                    <img src="/image/logo.png" alt="" />
+                                    <img src="/image/logo.png" className="h-11 w-11"alt="" />
                                 </div>
 
                                 <div>

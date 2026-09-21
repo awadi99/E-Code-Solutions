@@ -112,7 +112,7 @@ export function Hero() {
 
                             {/* PRIMARY */}
 
-                            <Link to="/sign-up">
+                            <Link to="/register">
 
                                 <motion.div
                                     whileHover={{ y: -2 }}
