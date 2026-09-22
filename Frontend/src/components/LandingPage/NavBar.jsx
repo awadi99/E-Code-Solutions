@@ -455,7 +455,7 @@ export default function Navbar() {
                                     }}
                                     onClick={() => {
                                         setIsOpen(false);
-                                        navigate("/sell");
+                                        navigate("/register");
                                     }}
                                     className="
                                         flex w-full
