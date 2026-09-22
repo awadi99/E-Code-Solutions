@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion, AnimatePresence } from "framer-motion";
 import { toast } from 'react-toastify';
 import { AddLayout } from "../components/common/ui/AuthLayout.jsx"
 import {
@@ -64,7 +63,7 @@ export function Register() {
 
     const handleGoogleAuth = () => {
 
-        const backendBase = import.meta.env.VITE_API_BASE_URL
+        const backendBase = import.meta.env.VITE_API_BASE_URL;
         if (selectedRole === "Company") {
             window.location.href = `${backendBase}/auth/google?role=${selectedRole}&companyName=${companyName}&agencyName=${agencyName}&service=${service}`;
         } else if (selectedRole === "Customer") {
@@ -73,7 +72,6 @@ export function Register() {
         else {
             window.location.href = `${backendBase}/auth/google?role=${selectedRole}`;
         }
-
     }
 
     const onSubmit = (data) => {
@@ -92,6 +90,7 @@ export function Register() {
         <AddLayout
             title="Create Account"
             subtitle="Join us in building a cleaner future through responsible e-waste management"
+            direction="left"
         >
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-7">
 
@@ -152,9 +151,10 @@ export function Register() {
         "
                         >
                             {showPassword ? (
-                                <EyeOff size={17} />
-                            ) : (
+
                                 <Eye size={17} />
+                            ) : (
+                                <EyeOff size={17} />
                             )}
                         </button>
                     </div>
@@ -427,6 +427,13 @@ export function Register() {
                 </p>
 
             </form>
+            <button
+                    onClick={()=>navigate("/")}
+                    className=" flex  justify-center items-center gap-2 mt-5 text-[13px] font-semibold text-gray-600/60 transition-colors hover:text-green-700"
+                >
+                    <ArrowLeft size={15}/>
+                    Back to Home
+                </button>
         </AddLayout>
     );
 }
