@@ -11,7 +11,7 @@ import {
 export const navItems = [
     {
         name: "Sales & Order",
-        path: "/sales-order",
+        path: "/main/sales-order",
         icon: BadgeDollarSign,
         roles: ["User"],
     },

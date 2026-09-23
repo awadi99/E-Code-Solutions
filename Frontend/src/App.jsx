@@ -56,7 +56,8 @@ export default function App() {
                     element={<Docs />}
                 />
                 <Route path="/main" element={<MainLayout />}>
-                    <Route index element={<SalesOrder />} />
+                    {/* <Route index element={<SalesOrder />} /> */}
+                    <Route path="sales-order" element={<SalesOrder/>}/>
                     <Route path="addproduct" element={<AddProducts />} />
                     <Route path="products" element={<Products />} />
                     <Route path="products/:productId" element={<ProductDetailsInfo />} />
