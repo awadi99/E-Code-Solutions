@@ -2,6 +2,7 @@ import express from 'express';
 import cors from "cors";
 import passport from 'passport';
 import authRoutes from "./module/auth/auth.router.js";
+import userRoutes from "./module/addProduct/add.product.router.js";
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import "./module/auth/google.strategy.js";
@@ -44,6 +45,8 @@ app.get("/ping", (req, res) => {
 });
 
 app.use("/api/auth",authRoutes);
+
+app.use("/api/user",userRoutes);
 
 
 // // post store data

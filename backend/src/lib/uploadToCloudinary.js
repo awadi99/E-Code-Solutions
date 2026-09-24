@@ -22,3 +22,18 @@ export const uploadBuffer = (fileBuffer) => {
         streamifier.createReadStream(fileBuffer).pipe(stream);
     });
 };
+
+
+export const deleteImage = async (publicId) => {
+
+    if (!publicId) {
+        return;
+    }
+
+    return await cloudinary.uploader.destroy(
+        publicId,
+        {
+            resource_type: "image",
+        }
+    );
+};

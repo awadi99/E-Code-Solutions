@@ -68,9 +68,16 @@ const AddProductSchema = new mongoose.Schema(
         },
 
         productImage: {
-            type: String,
-            required: true,
-            trim: true,
+            url: {
+                type: String,
+                required: true,
+                trim: true,
+            },
+            publicId: {
+                type: String,
+                required: true,
+                trim: true,
+            },
         },
 
         // User who created the product
