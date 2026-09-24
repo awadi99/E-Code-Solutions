@@ -1,18 +1,25 @@
 import React, { useMemo, useState } from "react";
+
 import ProductSearch from "../components/products/ProductSearch";
-import ProductFilters from "../components/products/ProductFilters";
 import ProductCard from "../components/products/ProductCard";
-import temporaryProducts from "../components/products/temporaryProducts";
+
+import { useAddProject } from "../hook/useAddProject";
 
 export default function Products() {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [condition, setCondition] = useState("All");
 
+    const {
+        products,
+        isProductsLoading,
+        productsError,
+    } = useAddProject();
+
     const filteredProducts = useMemo(() => {
         const query = search.trim().toLowerCase();
 
-        return temporaryProducts.filter((product) => {
+        return products.filter((product) => {
             if (!product) return false;
 
             const matchesSearch =
@@ -45,7 +52,7 @@ export default function Products() {
                 matchesCondition
             );
         });
-    }, [search, category, condition]);
+    }, [products, search, category, condition]);
 
     const handleBuy = (product) => {
         console.log("Buy:", product);
@@ -57,11 +64,38 @@ export default function Products() {
         setCondition("All");
     };
 
+    if (isProductsLoading) {
+        return (
+        <div className="flex min-h-screen items-center justify-center bg-[#f6faf5]">
+        <div className="flex flex-col items-center gap-3">
+            <div className="h-9 w-9 animate-spin rounded-full border-2 border-green-100 border-t-[#063b2d]" />
+            <p className="text-sm font-medium text-slate-500">
+                Loading product...
+            </p>
+        </div>
+    </div>
+        )
+    }
+
+    if (productsError) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-[#f6faf5]">
+            <div className="flex flex-col items-center gap-3">
+                <div className="h-9 w-9 animate-spin rounded-full border-2 border-green-100 border-t-[#063b2d]" />
+
+                <p className="text-sm font-medium text-slate-500">
+                Unable to load products.
+                </p>
+            </div>
+        </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-[#f6faf5] p-4 sm:p-6 lg:p-8">
-
             <div className="mx-auto max-w-7xl">
 
+                {/* Header */}
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold text-[#063b2d]">
                         Products
@@ -72,32 +106,36 @@ export default function Products() {
                     </p>
                 </div>
 
+                {/* Search + Filters */}
                 <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                     <ProductSearch
                         value={search}
                         onChange={setSearch}
                     />
-
-                    <ProductFilters
-                        category={category}
-                        condition={condition}
-                        onCategoryChange={setCategory}
-                        onConditionChange={setCondition}
-                        onReset={resetFilters}
-                    />
                 </div>
 
-                {/* PRODUCT CARDS */}
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-                    {filteredProducts.map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            onBuy={handleBuy}
-                        />
-                    ))}
-                </div>
+                {/* Products */}
+                {filteredProducts.length === 0 ? (
+                    <div className="rounded-3xl border border-dashed border-green-200 bg-white px-6 py-16 text-center">
+                        <h3 className="text-base font-bold text-[#063b2d]">
+                            No products found
+                        </h3>
 
+                        <p className="mt-2 text-sm text-slate-400">
+                            Try changing your search or filters.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                        {filteredProducts.map((product) => (
+                            <ProductCard
+                                key={product._id}
+                                product={product}
+                                onBuy={handleBuy}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

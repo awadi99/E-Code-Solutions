@@ -1,7 +1,7 @@
 import React from "react";
-import ProductFormField from "./ProductFormField";
+import Input from "../common/ui/Input";
 
-const ProductInformation = ({ formData, onChange }) => {
+const ProductInformation = ({ register, errors }) => {
     return (
         <section
             className="
@@ -13,7 +13,6 @@ const ProductInformation = ({ formData, onChange }) => {
                 sm:p-6
             "
         >
-            {/* HEADER */}
             <div className="mb-6">
                 <h2
                     className="
@@ -32,25 +31,23 @@ const ProductInformation = ({ formData, onChange }) => {
                 </p>
             </div>
 
-            {/* FIELDS */}
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
 
                 {/* PRODUCT NAME */}
-                <ProductFormField
+                <Input
                     label="Product Name"
-                    name="productName"
-                    value={formData.productName}
-                    onChange={onChange}
-                    placeholder="e.g. Samsung Galaxy F62"
-                    required
+                    placeholder="Samsung F62"
+                    error={errors.productName?.message}
+                    {...register("productName")}
+                    className="bg-slate-50"
                 />
 
                 {/* CATEGORY */}
                 <SelectField
                     label="Category"
                     name="category"
-                    value={formData.category}
-                    onChange={onChange}
+                    register={register}
+                    error={errors.category?.message}
                     options={[
                         "Mobile",
                         "Laptop",
@@ -65,29 +62,29 @@ const ProductInformation = ({ formData, onChange }) => {
                 />
 
                 {/* BRAND */}
-                <ProductFormField
+                <Input
                     label="Brand"
-                    name="brand"
-                    value={formData.brand}
-                    onChange={onChange}
                     placeholder="e.g. Samsung"
+                    error={errors.brand?.message}
+                    {...register("brand")}
+                    className="bg-slate-50"
                 />
 
                 {/* MODEL */}
-                <ProductFormField
+                <Input
                     label="Model"
-                    name="model"
-                    value={formData.model}
-                    onChange={onChange}
                     placeholder="e.g. SM-E625F"
+                    error={errors.model?.message}
+                    {...register("model")}
+                    className="bg-slate-50"
                 />
 
                 {/* CONDITION */}
                 <SelectField
                     label="Condition"
                     name="condition"
-                    value={formData.condition}
-                    onChange={onChange}
+                    register={register}
+                    error={errors.condition?.message}
                     options={[
                         "New",
                         "Like New",
@@ -99,14 +96,14 @@ const ProductInformation = ({ formData, onChange }) => {
                 />
 
                 {/* QUANTITY */}
-                <ProductFormField
+                <Input
                     label="Quantity"
-                    name="quantity"
                     type="number"
                     min="1"
-                    value={formData.quantity}
-                    onChange={onChange}
                     placeholder="Enter quantity"
+                    error={errors.quantity?.message}
+                    {...register("quantity")}
+                    className="bg-slate-50"
                 />
             </div>
         </section>
@@ -115,17 +112,12 @@ const ProductInformation = ({ formData, onChange }) => {
 
 export default ProductInformation;
 
-
-/* ---------------------------------------------
-   SELECT FIELD
---------------------------------------------- */
-
 function SelectField({
     label,
     name,
-    value,
-    onChange,
+    register,
     options,
+    error,
 }) {
     return (
         <div className="w-full">
@@ -147,14 +139,11 @@ function SelectField({
 
             <select
                 id={name}
-                name={name}
-                value={value}
-                onChange={onChange}
-                required
-                className="
+                {...register(name)}
+                className={`
                     w-full
                     rounded-xl
-                    border border-green-100
+                    border
                     bg-[#f6faf5]
                     px-4
                     py-3
@@ -167,7 +156,12 @@ function SelectField({
                     focus:border-green-400
                     focus:ring-2
                     focus:ring-green-100
-                "
+                    ${
+                        error
+                            ? "border-red-400"
+                            : "border-green-100"
+                    }
+                `}
             >
                 <option value="">
                     Select {label.toLowerCase()}
@@ -182,6 +176,12 @@ function SelectField({
                     </option>
                 ))}
             </select>
+
+            {error && (
+                <p className="mt-1 ml-1 text-xs font-medium text-red-500">
+                    {error}
+                </p>
+            )}
         </div>
     );
 }

@@ -18,7 +18,7 @@ export default function ProfileLogout() {
                 throw new Error("Logout failed");
             }
 
-            window.location.href = "/sign-in";
+            window.location.href = "/";
         } catch (error) {
             console.error("Logout error:", error);
         }

@@ -1,7 +1,10 @@
 import React from "react";
 import { FileText, IndianRupee } from "lucide-react";
 
-export default function ProductDetails({ formData, onChange }) {
+export default function ProductDetails({
+    register,
+    errors,
+}) {
     return (
         <section
             className="
@@ -50,6 +53,7 @@ export default function ProductDetails({ formData, onChange }) {
             </div>
 
             <div className="space-y-5">
+
                 {/* DESCRIPTION */}
                 <div>
                     <label
@@ -70,19 +74,14 @@ export default function ProductDetails({ formData, onChange }) {
 
                     <textarea
                         id="description"
-                        name="description"
-                        value={formData.description}
-                        onChange={onChange}
                         rows={5}
-                        placeholder="
-                            Describe the product, its condition,
-                            defects, accessories, etc.
-                        "
-                        className="
+                        placeholder="Describe the product, its condition, defects, accessories, etc."
+                        {...register("description")}
+                        className={`
                             w-full
                             resize-none
                             rounded-xl
-                            border border-green-100
+                            border
                             bg-[#f6faf5]
                             px-4
                             py-3
@@ -97,19 +96,30 @@ export default function ProductDetails({ formData, onChange }) {
                             focus:border-green-400
                             focus:ring-2
                             focus:ring-green-100
-                        "
+                            ${
+                                errors?.description
+                                    ? "border-red-400"
+                                    : "border-green-100"
+                            }
+                        `}
                     />
 
-                    <p className="mt-2 ml-1 text-[10px] text-slate-400">
-                        Mention any damage, missing parts, accessories, or
-                        other important information.
-                    </p>
+                    {errors?.description ? (
+                        <p className="mt-2 ml-1 text-xs font-medium text-red-500">
+                            {errors.description.message}
+                        </p>
+                    ) : (
+                        <p className="mt-2 ml-1 text-[10px] text-slate-400">
+                            Mention any damage, missing parts, accessories, or
+                            other important information.
+                        </p>
+                    )}
                 </div>
 
-                {/* PRICE */}
+                {/* EXPECTED PRICE */}
                 <div>
                     <label
-                        htmlFor="price"
+                        htmlFor="expectedPrice"
                         className="
                             mb-2
                             ml-1
@@ -138,17 +148,15 @@ export default function ProductDetails({ formData, onChange }) {
                         />
 
                         <input
-                            id="price"
-                            name="price"
+                            id="expectedPrice"
                             type="number"
-                            min="0"
-                            value={formData.price}
-                            onChange={onChange}
+                            min="1"
                             placeholder="Enter expected price"
-                            className="
+                            {...register("expectedPrice")}
+                            className={`
                                 w-full
                                 rounded-xl
-                                border border-green-100
+                                border
                                 bg-[#f6faf5]
                                 py-3
                                 pl-9
@@ -163,14 +171,26 @@ export default function ProductDetails({ formData, onChange }) {
                                 focus:border-green-400
                                 focus:ring-2
                                 focus:ring-green-100
-                            "
+                                ${
+                                    errors?.expectedPrice
+                                        ? "border-red-400"
+                                        : "border-green-100"
+                                }
+                            `}
                         />
                     </div>
 
-                    <p className="mt-2 ml-1 text-[10px] text-slate-400">
-                        Enter the price you expect to receive for this item.
-                    </p>
+                    {errors?.expectedPrice ? (
+                        <p className="mt-2 ml-1 text-xs font-medium text-red-500">
+                            {errors.expectedPrice.message}
+                        </p>
+                    ) : (
+                        <p className="mt-2 ml-1 text-[10px] text-slate-400">
+                            Enter the price you expect to receive for this item.
+                        </p>
+                    )}
                 </div>
+
             </div>
         </section>
     );

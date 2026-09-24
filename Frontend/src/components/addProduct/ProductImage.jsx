@@ -9,6 +9,7 @@ export default function ProductImage({
     image,
     onImageChange,
     onRemove,
+    error,
 }) {
     const fileInputRef = useRef(null);
 
@@ -17,7 +18,18 @@ export default function ProductImage({
 
         if (!file) return;
 
+        console.log("PRODUCT IMAGE SELECTED:", {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            isFile: file instanceof File,
+        });
+
+        
         onImageChange?.(file);
+
+        // Allow selecting the same file again
+        e.target.value = "";
     };
 
     return (
@@ -72,7 +84,7 @@ export default function ProductImage({
                 <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="
+                    className={`
                         flex
                         min-h-44
                         w-full
@@ -82,7 +94,6 @@ export default function ProductImage({
                         rounded-xl
                         border-2
                         border-dashed
-                        border-green-200
                         bg-[#f6faf5]
                         px-5
                         text-center
@@ -90,7 +101,12 @@ export default function ProductImage({
                         duration-200
                         hover:border-green-400
                         hover:bg-green-50
-                    "
+                        ${
+                            error
+                                ? "border-red-400"
+                                : "border-green-200"
+                        }
+                    `}
                 >
                     <div
                         className="
@@ -169,14 +185,21 @@ export default function ProductImage({
             <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/png,image/jpeg,image/jpg"
+                accept="image/png,image/jpeg,image/webp"
                 onChange={handleFileChange}
                 className="hidden"
             />
 
-            <p className="mt-3 text-[10px] text-slate-400">
-                Recommended: clear product image with good lighting.
-            </p>
+            {error ? (
+                <p className="mt-2 text-xs font-medium text-red-500">
+                    {error}
+                </p>
+            ) : (
+                <p className="mt-3 text-[10px] text-slate-400">
+                    Recommended: clear product image with good lighting.
+                    Maximum size: 5MB.
+                </p>
+            )}
         </section>
     );
 }

@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    MapPin,
     ShoppingCart,
     Package,
     ArrowUpRight,
@@ -11,7 +10,7 @@ export default function ProductCard({ product, onBuy }) {
     const navigate = useNavigate();
 
     const handleCardClick = () => {
-        navigate(`/main/products/${product.id}`);
+        navigate(`/main/products/${product._id}`);
     };
 
     const handleBuy = (e) => {
@@ -36,9 +35,9 @@ export default function ProductCard({ product, onBuy }) {
         >
             {/* Product Image */}
             <div className="relative h-52 overflow-hidden bg-[#f6faf5]">
-                {product.image ? (
+                {product.productImage?.url ? (
                     <img
-                        src={product.image}
+                        src={product.productImage.url}
                         alt={product.productName}
                         className="
                             h-full w-full
@@ -71,6 +70,23 @@ export default function ProductCard({ product, onBuy }) {
                 >
                     {product.condition}
                 </span>
+
+                {/* Category */}
+                <span
+                    className="
+                        absolute bottom-3 left-3
+                        rounded-full
+                        border border-white/80
+                        bg-white/90
+                        px-3 py-1
+                        text-[9px]
+                        font-bold uppercase
+                        tracking-wider
+                        text-green-700
+                    "
+                >
+                    {product.category}
+                </span>
             </div>
 
             {/* Product Content */}
@@ -83,61 +99,32 @@ export default function ProductCard({ product, onBuy }) {
                 </p>
 
                 <h3 className="
-                    mt-1 text-base font-bold
+                    mt-1 truncate text-base font-bold
                     text-[#063b2d]
                 ">
                     {product.productName}
                 </h3>
 
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 truncate text-xs text-slate-400">
                     {product.brand} · {product.model}
                 </p>
 
                 {/* Product Info */}
                 <div className="
-                    my-4 space-y-2
+                    my-4
                     border-y border-green-50
                     py-3
                 ">
                     <div className="flex items-center justify-between text-xs">
                         <span className="text-slate-400">
-                            Seller
-                        </span>
-
-                        <span className="
-                            max-w-[60%] truncate
-                            font-medium text-slate-600
-                        ">
-                            {product.seller}
-                        </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                        <span className="
-                            flex items-center gap-1
-                            text-slate-400
-                        ">
-                            <MapPin size={13} />
-                            Location
-                        </span>
-
-                        <span className="
-                            max-w-[60%] truncate
-                            font-medium text-slate-600
-                        ">
-                            {product.location}
-                        </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-xs">
-                        <span className="text-slate-400">
                             Available
                         </span>
 
-                        <span className="
-                            font-semibold text-[#063b2d]
-                        ">
-                            {product.quantity}
+                        <span className="font-semibold text-[#063b2d]">
+                            {product.quantity}{" "}
+                            {Number(product.quantity) === 1
+                                ? "unit"
+                                : "units"}
                         </span>
                     </div>
                 </div>
@@ -159,7 +146,10 @@ export default function ProductCard({ product, onBuy }) {
                             text-xl font-bold
                             text-[#063b2d]
                         ">
-                            ₹{Number(product.price).toLocaleString("en-IN")}
+                            ₹
+                            {Number(
+                                product.expectedPrice || 0
+                            ).toLocaleString("en-IN")}
                         </p>
                     </div>
 

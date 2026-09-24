@@ -4,7 +4,6 @@ import ProfileInfo from "../components/profile/ProfileInfo";
 import ProfileRole from "../components/profile/ProfileRole";
 import ProfileLogout from "../components/profile/ProfileLogout";
 import { useAuth } from "../hook/useAuth.js";
-import { use } from "react";
 
 
 export default function Profile() {
@@ -30,7 +29,7 @@ export default function Profile() {
 
                 <button
                     type="button"
-                    onClick={() => (window.location.href = "/sign-in")}
+                    onClick={() => (window.location.href = "/login")}
                     className="rounded-xl bg-[#063b2d] px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-green-900/10 transition-colors hover:bg-green-800"
                 >
                     Login Again

@@ -1,42 +1,70 @@
 import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import {
     PackagePlus,
-    CheckCircle2,
 } from "lucide-react";
 
 import ProductInformation from "../components/addProduct/ProductInformation";
 import ProductDetails from "../components/addProduct/ProductDetails";
 import ProductImage from "../components/addProduct/ProductImage";
+import Button from "../components/common/ui/Button.jsx";
+
+import { addproductSchema } from "../schema/add.product.schema.js";
+import { useAddProject } from "../hook/useAddProject.js";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
-    const [formData, setFormData] = useState({
-        productName: "",
-        category: "",
-        brand: "",
-        model: "",
-        condition: "",
-        quantity: "",
-        description: "",
-        price: "",
+    const [image, setImage] = useState(null);
+    const navigate = useNavigate();
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        reset,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(addproductSchema),
+
+        defaultValues: {
+            productName: "",
+            category: "",
+            brand: "",
+            model: "",
+            condition: "",
+            quantity: "",
+            description: "",
+            expectedPrice: "",
+            productImage: undefined,
+        },
     });
 
-    const [image, setImage] = useState(null);
+    const { createProduct } = useAddProject();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    // =========================
+    // IMAGE
+    // =========================
 
     const handleImageChange = (file) => {
         if (!file) return;
 
-        setImage({
+        if (image?.preview) {
+            URL.revokeObjectURL(image.preview);
+        }
+
+        const imageData = {
             file,
             preview: URL.createObjectURL(file),
+        };
+
+        setImage(imageData);
+
+        setValue("productImage", file, {
+            shouldValidate: true,
+            shouldDirty: true,
         });
     };
 
@@ -46,19 +74,46 @@ export default function AddProducts() {
         }
 
         setImage(null);
+
+        setValue("productImage", undefined, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    // =========================
+    // SUBMIT
+    // =========================
 
-        const productData = {
-            ...formData,
-            image: image?.file || null,
-        };
+    const onSubmit = async (data) => {
+        try {
+            const formData = new FormData();
 
-        console.log("Product data:", productData);
+            formData.append("productName", data.productName);
+            formData.append("category", data.category);
+            formData.append("brand", data.brand);
+            formData.append("model", data.model);
+            formData.append("condition", data.condition);
+            formData.append("quantity", data.quantity);
+            formData.append("description", data.description);
+            formData.append("expectedPrice", data.expectedPrice);
+            formData.append("productImage", data.productImage);
 
-        // API will be connected here later.
+            await createProduct.mutateAsync(formData);
+
+            toast.success("Product created successfully");
+
+            reset();
+            // Reset React Hook Form
+            // reset() can be added here next.
+
+        } catch (error) {
+            console.error(
+                "Create Product Error:",
+                error.response?.data?.message ||
+                error.message
+            );
+        }
     };
 
     return (
@@ -76,6 +131,7 @@ export default function AddProducts() {
             {/* HEADER */}
             <header className="mb-8">
                 <div className="flex items-center gap-3 sm:gap-4">
+
                     <div
                         className="
                             flex h-11 w-11 shrink-0
@@ -128,12 +184,13 @@ export default function AddProducts() {
                             Publish your electronic waste
                         </p>
                     </div>
+
                 </div>
             </header>
 
             {/* FORM */}
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(onSubmit)}
                 className="
                     mx-auto
                     w-full
@@ -141,16 +198,19 @@ export default function AddProducts() {
                     space-y-6
                 "
             >
+
                 {/* PRODUCT INFORMATION */}
                 <ProductInformation
-                    formData={formData}
-                    onChange={handleChange}
+                    register={register}
+                    errors={errors}
+                    setValue={setValue}
+                    watch={watch}
                 />
 
                 {/* PRODUCT DETAILS */}
                 <ProductDetails
-                    formData={formData}
-                    onChange={handleChange}
+                    register={register}
+                    errors={errors}
                 />
 
                 {/* PRODUCT IMAGE */}
@@ -158,36 +218,35 @@ export default function AddProducts() {
                     image={image}
                     onImageChange={handleImageChange}
                     onRemove={removeImage}
+                    error={errors.productImage?.message}
                 />
 
                 {/* PUBLISH */}
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
+                <div className="flex items-center justify-between">
+                    <Button
+                        onClick={()=>navigate("/main/addproduct")}
                         className="
-                            inline-flex
-                            items-center
-                            justify-center
-                            gap-2
-                            rounded-xl
                             bg-[#063b2d]
-                            px-6
-                            py-3
-                            text-sm
-                            font-semibold
-                            text-white
-                            shadow-sm
-                            transition-all
-                            duration-200
                             hover:bg-green-800
-                            hover:shadow-md
-                            active:scale-[0.98]
                         "
                     >
-                        <CheckCircle2 size={17} />
+                        back 
+                    </Button>
+
+                    <Button
+                        type="submit"
+                        loading={createProduct.isPending}
+                        disabled={createProduct.isPending}
+                        className="
+                            bg-[#063b2d]
+                            hover:bg-green-800
+                        "
+                    >
                         Publish Product
-                    </button>
+                    </Button>
+
                 </div>
+
             </form>
         </div>
     );
