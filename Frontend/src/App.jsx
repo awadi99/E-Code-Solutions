@@ -14,7 +14,6 @@ import ProductDetailsInfo from "./components/products/ProductDetailsInfo.jsx";
 import InvoiceOrder from "./pages/InvoiceOrder.jsx";
 import Profile from "./pages/Profile.jsx"
 import UserProduct from "./pages/UserProduct.jsx";
-UserProduct
 // Lazy loaded pages
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login.jsx"));
