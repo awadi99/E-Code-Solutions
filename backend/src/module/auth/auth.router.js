@@ -48,7 +48,7 @@ router.get(
     passport.authenticate("google", {
         session: false,
         failureRedirect:
-            "https://e-code-solutions.onrender.com/sign-in?error=auth_failed",
+            "https://e-code-solutions-srr9.onrender.com/sign-in?error=auth_failed",
     }),
     googleCallback
 );
