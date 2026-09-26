@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 import ProductSearch from "../components/products/ProductSearch";
 import ProductCard from "../components/products/ProductCard";
 
-import { useAddProject } from "../hook/useAddProject";
+import { useProduct } from "../hook/useOrder.js";
 
 export default function Products() {
     const [search, setSearch] = useState("");
@@ -14,7 +15,8 @@ export default function Products() {
         products,
         isProductsLoading,
         productsError,
-    } = useAddProject();
+        buyProduct,
+    } = useProduct();
 
     const filteredProducts = useMemo(() => {
         const query = search.trim().toLowerCase();
@@ -54,8 +56,28 @@ export default function Products() {
         });
     }, [products, search, category, condition]);
 
-    const handleBuy = (product) => {
-        console.log("Buy:", product);
+    const handleBuy = async (product) => {
+        try {
+            const data = await buyProduct(product._id);
+    
+            if (!data) {
+                return;
+            }
+    
+            console.log("Buy Product Response:", data);
+            toast.success("Product Buy successfully");
+    
+        } catch (error) {
+            console.error(
+                "Buy Product Error:",
+                error.response?.data?.message || error.message
+            );
+
+        toast.error(
+            error.response?.data?.message || "Failed to buy product"
+        );
+
+        }
     };
 
     const resetFilters = () => {

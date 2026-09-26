@@ -10,8 +10,9 @@ import {
     Layers3,
     CalendarDays,
 } from "lucide-react";
+import { toast } from "react-toastify";
 
-import { useAddProject } from "../../hook/useAddProject";
+import { useProduct } from "../../hook/useOrder";
 
 export default function ProductDetailsInfo() {
     const { productId } = useParams();
@@ -21,7 +22,8 @@ export default function ProductDetailsInfo() {
         products,
         isProductsLoading,
         productsError,
-    } = useAddProject();
+        buyProduct
+    } = useProduct();
 
     const product = products.find(
         (item) => String(item?._id) === String(productId)
@@ -102,8 +104,24 @@ export default function ProductDetailsInfo() {
         );
     }
 
-    const handleBuy = () => {
-        console.log("Buy product:", product);
+    const handleBuy =  async (product) => {
+        try {
+            const data = await buyProduct(productId);
+            if(!data){
+                return;
+            }
+            toast.success("Product Buy successfully");
+            return data;
+        } catch (error) {
+            console.error(
+                "Buy Product Error:",
+                error.response?.data?.message || error.message
+            );
+
+        toast.error(
+            error.response?.data?.message || "Failed to buy product"
+        );
+        }
     };
 
     return (
