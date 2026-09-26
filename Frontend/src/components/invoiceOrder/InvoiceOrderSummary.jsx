@@ -3,20 +3,25 @@ import {
     ShoppingBag,
     FileText,
     IndianRupee,
-    CheckCircle2,
+    Package,
 } from "lucide-react";
 
 export default function InvoiceOrderSummary({ orders = [] }) {
     const totalOrders = orders.length;
 
     const totalAmount = orders.reduce(
-        (sum, order) => sum + Number(order.total || 0),
+        (sum, order) =>
+            sum +
+            Number(order.product?.expectedPrice || 0) *
+                Number(order.product?.quantity || 0),
         0
     );
 
-    const paidOrders = orders.filter(
-        (order) => order.paymentStatus === "Paid"
-    ).length;
+    const totalQuantity = orders.reduce(
+        (sum, order) =>
+            sum + Number(order.product?.quantity || 0),
+        0
+    );
 
     const invoices = orders.length;
 
@@ -37,9 +42,9 @@ export default function InvoiceOrderSummary({ orders = [] }) {
             icon: IndianRupee,
         },
         {
-            label: "Paid Orders",
-            value: paidOrders,
-            icon: CheckCircle2,
+            label: "Total Items",
+            value: totalQuantity,
+            icon: Package,
         },
     ];
 
@@ -51,21 +56,51 @@ export default function InvoiceOrderSummary({ orders = [] }) {
                 return (
                     <div
                         key={item.label}
-                        className="rounded-2xl border border-green-100 bg-white p-5 shadow-sm"
+                        className="
+                            rounded-2xl
+                            border border-green-100
+                            bg-white
+                            p-5
+                            shadow-sm
+                            transition-shadow
+                            duration-200
+                            hover:shadow-md
+                        "
                     >
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-4">
                             <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                                <p className="
+                                    text-[10px]
+                                    font-bold
+                                    uppercase
+                                    tracking-[0.15em]
+                                    text-slate-400
+                                ">
                                     {item.label}
                                 </p>
 
-                                <p className="mt-2 text-xl font-bold text-[#063b2d]">
+                                <p className="
+                                    mt-2
+                                    text-xl
+                                    font-bold
+                                    text-[#063b2d]
+                                ">
                                     {item.value}
                                 </p>
                             </div>
 
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#063b2d]">
-                                <Icon size={19} />
+                            <div className="
+                                flex h-10 w-10
+                                shrink-0
+                                items-center justify-center
+                                rounded-xl
+                                bg-green-50
+                                text-[#063b2d]
+                            ">
+                                <Icon
+                                    size={19}
+                                    strokeWidth={1.8}
+                                />
                             </div>
                         </div>
                     </div>

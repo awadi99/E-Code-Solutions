@@ -110,7 +110,15 @@ export default function ProductDetailsInfo() {
             if(!data){
                 return;
             }
+
             toast.success("Product Buy successfully");
+            setTimeout(()=>{
+            navigate("/main/invoice-order",{
+                state:{
+                    order: data,
+                }
+            });
+            },4000);
             return data;
         } catch (error) {
             console.error(
@@ -120,7 +128,7 @@ export default function ProductDetailsInfo() {
 
         toast.error(
             error.response?.data?.message || "Failed to buy product"
-        );
+        ,);
         }
     };
 

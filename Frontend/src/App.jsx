@@ -14,12 +14,15 @@ import ProductDetailsInfo from "./components/products/ProductDetailsInfo.jsx";
 import InvoiceOrder from "./pages/InvoiceOrder.jsx";
 import Profile from "./pages/Profile.jsx"
 import UserProduct from "./pages/UserProduct.jsx";
+import GoogleAuthSuccess from "./pages/GoogleAuthSuccess.jsx";
 // Lazy loaded pages
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login.jsx"));
 const Register = lazy(() => import("./pages/Register.jsx"));
 const Docs = lazy(() => import("./pages/Docs"));
 const MainLayout = lazy (()=> import('./layouts/MainLayout.jsx'));
+
+
 
 
 export default function App() {
@@ -59,6 +62,12 @@ export default function App() {
                     path="/docs"
                     element={<Docs />}
                 />
+
+
+                <Route path='/auth/google/success' element={<GoogleAuthSuccess />} />
+
+
+
                 <Route path="/main" element={<MainLayout />}>
                     {/* <Route index element={<SalesOrder />} /> */}
                     <Route path="sales-order" element={<SalesOrder/>}/>

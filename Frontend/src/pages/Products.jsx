@@ -5,8 +5,10 @@ import ProductSearch from "../components/products/ProductSearch";
 import ProductCard from "../components/products/ProductCard";
 
 import { useProduct } from "../hook/useOrder.js";
+import { useNavigate } from "react-router-dom";
 
 export default function Products() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("All");
     const [condition, setCondition] = useState("All");
@@ -64,8 +66,14 @@ export default function Products() {
                 return;
             }
     
-            console.log("Buy Product Response:", data);
             toast.success("Product Buy successfully");
+            setTimeout(()=>{
+            navigate("/main/invoice-order",{
+                state:{
+                    order: data,
+                }
+            });
+            },3000);
     
         } catch (error) {
             console.error(

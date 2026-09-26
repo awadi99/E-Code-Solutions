@@ -75,24 +75,24 @@ export const googleCallback = async (req, res) => {
         }, res);
 
         const frontendUrl = process.env.CLIENT_URL || "http://localhost:5173";
-        let targetPath = "/items";
+        let targetPath = "/main";
 
-        if (req.user.role === "User") {
-            targetPath = "/addproducts"
-        }
-        // else if(req.user.role==="Company" || req.user.role==="Customer"){
-        //     targetPath="/items"
-        // }
-        else {
-            targetPath = "/items";
-
-        };
+            if (req.user.role === "User") {
+                targetPath = "/main/sales-order";
+            } else if (
+                req.user.role === "Company" ||
+                req.user.role === "Customer"
+            ) {
+                targetPath = "/main/products";
+            }
 
         res.redirect(`${frontendUrl}/auth/google/success?token=${token}&redirect=${targetPath}`);
 
 
     } catch (error) {
         console.error("Google Callback Error:", error);
-        res.redirect("http://localhost:5173/sign-up?error=auth_failed");
+        res.redirect("https://e-code-solutions-srr9.onrender.com/sign-up?error=auth_failed");
     }
 };
+
+

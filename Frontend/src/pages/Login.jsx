@@ -42,7 +42,7 @@ export function Login() {
         loginUser.mutate(data,{
             onSuccess:()=>{
                 toast.success("Login successful! Welcome back.")
-                navigate("/items")
+                navigate("/main")
             },
             onError:(error)=>{
                 toast.error(error.response?.data?.message|| "Login failed. Please try again.")

@@ -1,7 +1,6 @@
 import React from "react";
 import {
     FileText,
-    MapPin,
     User,
     Package,
     IndianRupee,
@@ -30,61 +29,93 @@ export default function InvoiceDetails({ order }) {
         );
     }
 
+    const product = order.product;
+    const buyer = order.buyer;
+    const seller = order.seller;
+
+    const total =
+        Number(product?.expectedPrice || 0) *
+        Number(product?.quantity || 0);
+
+    const invoiceId = product?._id
+        ? `INV-${String(product._id).slice(-6).toUpperCase()}`
+        : "INV-000000";
+
+    const orderDate = product?.createdAt
+        ? new Date(product.createdAt).toLocaleDateString("en-IN")
+        : "—";
+
     return (
-        <div className="rounded-2xl border border-green-100 bg-white shadow-sm">
+        <div className="overflow-hidden rounded-2xl border border-green-100 bg-white shadow-sm">
 
             {/* Invoice Header */}
             <div className="border-b border-green-50 p-6 sm:p-7">
                 <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
 
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#063b2d]">
-                                <FileText size={19} />
-                            </div>
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-green-50 text-[#063b2d]">
+                            <FileText size={19} />
+                        </div>
 
-                            <div>
-                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                                    Invoice
-                                </p>
+                        <div>
+                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                                Invoice
+                            </p>
 
-                                <h2 className="text-lg font-bold text-[#063b2d]">
-                                    {order.invoiceId}
-                                </h2>
-                            </div>
+                            <h2 className="text-lg font-bold text-[#063b2d]">
+                                {invoiceId}
+                            </h2>
                         </div>
                     </div>
 
                     <div className="sm:text-right">
                         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                            Order ID
+                            Product Name
                         </p>
 
-                        <p className="mt-1 text-sm font-bold text-[#063b2d]">
-                            {order.id}
+                        <p className="mt-1 max-w-[220px] truncate text-xs font-bold text-[#063b2d]">
+                            {product?.productName || "—"}
                         </p>
                     </div>
                 </div>
             </div>
 
-            {/* Dates */}
-            <div className="grid grid-cols-1 gap-4 border-b border-green-50 p-6 sm:grid-cols-2">
+            {/* Date */}
+            <div className="border-b border-green-50 p-6">
                 <Info
                     icon={CalendarDays}
                     label="Order Date"
-                    value={order.orderDate}
-                />
-
-                <Info
-                    icon={CalendarDays}
-                    label="Invoice Date"
-                    value={order.invoiceDate}
+                    value={orderDate}
                 />
             </div>
 
-            {/* Buyer / Seller */}
+            {/* Buyer & Seller */}
             <div className="grid grid-cols-1 gap-6 border-b border-green-50 p-6 sm:grid-cols-2">
 
+                {/* Buyer */}
+                <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
+                        Buyer
+                    </p>
+
+                    <div className="mt-3 flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-[#063b2d]">
+                            <User size={17} />
+                        </div>
+
+                        <div>
+                            <p className="text-sm font-semibold text-slate-700">
+                                {buyer?.fullName || "Unknown buyer"}
+                            </p>
+
+                            <p className="mt-1 text-xs text-slate-400">
+                                {buyer?.role || "Buyer"}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Seller */}
                 <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
                         Seller
@@ -97,33 +128,15 @@ export default function InvoiceDetails({ order }) {
 
                         <div>
                             <p className="text-sm font-semibold text-slate-700">
-                                {order.seller}
+                                {seller?.fullName || "Unknown seller"}
                             </p>
 
-                            <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
-                                <MapPin size={12} />
-                                {order.location}
+                            <p className="mt-1 text-xs text-slate-400">
+                                Seller
                             </p>
                         </div>
                     </div>
                 </div>
-
-                <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                        Buyer
-                    </p>
-
-                    <div className="mt-3 flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-50 text-[#063b2d]">
-                            <User size={17} />
-                        </div>
-
-                        <p className="text-sm font-semibold text-slate-700">
-                            {order.buyer}
-                        </p>
-                    </div>
-                </div>
-
             </div>
 
             {/* Product */}
@@ -134,6 +147,8 @@ export default function InvoiceDetails({ order }) {
                 </p>
 
                 <div className="mt-4 overflow-hidden rounded-xl border border-green-50">
+
+                    {/* Product heading */}
                     <div className="flex items-center gap-4 bg-[#f6faf5] p-4">
 
                         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-[#063b2d]">
@@ -142,39 +157,57 @@ export default function InvoiceDetails({ order }) {
 
                         <div className="min-w-0 flex-1">
                             <p className="text-sm font-bold text-[#063b2d]">
-                                {order.product}
+                                {product?.productName || "—"}
                             </p>
 
                             <p className="mt-1 text-xs text-slate-400">
-                                {order.category} · {order.condition}
+                                {product?.brand || "—"} ·{" "}
+                                {product?.model || "—"}
                             </p>
                         </div>
 
+                        <span className="shrink-0 rounded-full bg-green-50 px-3 py-1 text-[9px] font-bold uppercase text-green-700">
+                            {product?.condition || "—"}
+                        </span>
                     </div>
 
+                    {/* Product information */}
                     <div className="grid grid-cols-2 border-t border-green-50 sm:grid-cols-4">
 
                         <InvoiceItem
-                            label="Product ID"
-                            value={order.productId}
+                            label="Category"
+                            value={product?.category || "—"}
                         />
 
                         <InvoiceItem
                             label="Quantity"
-                            value={order.quantity}
+                            value={product?.quantity || 0}
                         />
 
                         <InvoiceItem
                             label="Unit Price"
-                            value={`₹${Number(order.price).toLocaleString("en-IN")}`}
+                            value={`₹${Number(
+                                product?.expectedPrice || 0
+                            ).toLocaleString("en-IN")}`}
                         />
 
                         <InvoiceItem
                             label="Total"
-                            value={`₹${Number(order.total).toLocaleString("en-IN")}`}
+                            value={`₹${total.toLocaleString("en-IN")}`}
                         />
 
                     </div>
+                </div>
+
+                {/* Description */}
+                <div className="mt-5 rounded-xl border border-green-50 bg-[#f6faf5] p-4">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                        Product Description
+                    </p>
+
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                        {product?.description || "No description provided."}
+                    </p>
                 </div>
 
                 {/* Total */}
@@ -185,16 +218,17 @@ export default function InvoiceDetails({ order }) {
                         </p>
 
                         <p className="mt-1 text-2xl font-bold text-[#063b2d]">
-                            ₹{Number(order.total).toLocaleString("en-IN")}
+                            ₹{total.toLocaleString("en-IN")}
                         </p>
                     </div>
 
-                    <IndianRupee
-                        size={28}
-                        className="text-green-200"
-                    />
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50">
+                        <IndianRupee
+                            size={22}
+                            className="text-[#063b2d]"
+                        />
+                    </div>
                 </div>
-
             </div>
         </div>
     );
@@ -227,7 +261,7 @@ function InvoiceItem({ label, value }) {
                 {label}
             </p>
 
-            <p className="mt-1 text-xs font-semibold text-slate-700">
+            <p className="mt-1 truncate text-xs font-semibold text-slate-700">
                 {value}
             </p>
         </div>
