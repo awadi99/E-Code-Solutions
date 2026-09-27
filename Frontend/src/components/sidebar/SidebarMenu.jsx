@@ -6,11 +6,11 @@ import { useAuth } from "../../hook/useAuth";
 const MenuItem = memo(({ item, expanded, onLogout }) => {
     const Icon = item.icon;
 
-    const content = (isActive) => (
+    const content = (isActive = false) => (
         <>
             <div className="flex items-center gap-3 z-10">
                 <Icon
-                    className={`w-[18px] h-[18px] shrink-0 transition-colors ${
+                    className={`h-[18px] w-[18px] shrink-0 transition-colors ${
                         isActive
                             ? "text-green-700"
                             : "text-slate-400"
@@ -28,7 +28,8 @@ const MenuItem = memo(({ item, expanded, onLogout }) => {
             {(item.badge || item.badges) && expanded && (
                 <div
                     className={`
-                        text-[10px] font-bold px-2 py-0.5 rounded-full
+                        rounded-full px-2 py-0.5
+                        text-[10px] font-bold
                         transition-colors
                         ${
                             isActive
@@ -43,16 +44,18 @@ const MenuItem = memo(({ item, expanded, onLogout }) => {
         </>
     );
 
+    {/* Logout */}
     if (item.name === "Logout") {
         return (
             <button
+                type="button"
                 onClick={onLogout}
                 className="
-                    w-full flex items-center justify-between
-                    px-3 py-2 rounded-lg
-                    group select-none
-                    transition-colors duration-200
+                    group flex w-full items-center justify-between
+                    rounded-lg px-3 py-2
+                    select-none
                     text-slate-500
+                    transition-colors duration-200
                     hover:bg-red-50
                     hover:text-red-600
                 "
@@ -62,21 +65,22 @@ const MenuItem = memo(({ item, expanded, onLogout }) => {
         );
     }
 
+    {/* Normal navigation item */}
     return (
         <NavLink
             to={item.path}
-            end={item.path === "/dashboard"}
+            end={item.path === "/main"}
             className={({ isActive }) => `
-                flex items-center justify-between
-                px-3 py-2 rounded-lg
-                group select-none
+                group flex items-center justify-between
+                rounded-lg px-3 py-2
+                select-none
                 transition-colors duration-200
 
                 ${
                     item.danger
                         ? "text-slate-500 hover:bg-red-50 hover:text-red-600"
                         : isActive
-                            ? "text-[#063b2d] bg-[#f6faf5] font-semibold"
+                            ? "bg-[#f6faf5] font-semibold text-[#063b2d]"
                             : "text-slate-600 hover:bg-[#f6faf5] hover:text-green-700"
                 }
             `}
@@ -88,47 +92,29 @@ const MenuItem = memo(({ item, expanded, onLogout }) => {
 
 MenuItem.displayName = "MenuItem";
 
-// export default function SidebarMenu({ expanded }) {
-//     const { user, logout } = useAuth();
-
-//     const filteredNavItems = useMemo(() => {
-//         if (!user) return [];
-
-//         return navItems.filter((item) =>
-//             item.roles?.includes(user?.role)
-//         );
-//     }, [user?.role]);
-
-//     const handleLogout = async () => {
-//         await logout();
-//     };
-
-//     return (
-//         <nav className="flex flex-col p-3 gap-1 mt-4">
-//             {filteredNavItems.map((item) => (
-//                 <MenuItem
-//                     key={item.name}
-//                     item={item}
-//                     expanded={expanded}
-//                     onLogout={handleLogout}
-//                 />
-//             ))}
-//         </nav>
-//     );
-// }
-
 export default function SidebarMenu({ expanded }) {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
 
-    // Temporary: show all menu items
-    const filteredNavItems = navItems;
+    const filteredNavItems = useMemo(() => {
+        if (!user?.role) {
+            return [];
+        }
+
+        return navItems.filter((item) =>
+            item.roles?.includes(user.role)
+        );
+    }, [user?.role]);
 
     const handleLogout = async () => {
-        await logout();
+        try {
+            await logout();
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
     };
 
     return (
-        <nav className="flex flex-col p-3 gap-1 mt-4">
+        <nav className="mt-4 flex flex-col gap-1 p-3">
             {filteredNavItems.map((item) => (
                 <MenuItem
                     key={item.name}

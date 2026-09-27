@@ -1,9 +1,10 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense ,useMemo} from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
 import { ToastContainer, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useAuth } from "./hook/useAuth.js";
 import Loading from "./components/common/Loading";
 import TOC from "./pages/TOC.jsx";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
@@ -15,6 +16,8 @@ import InvoiceOrder from "./pages/InvoiceOrder.jsx";
 import Profile from "./pages/Profile.jsx"
 import UserProduct from "./pages/UserProduct.jsx";
 import GoogleAuthSuccess from "./pages/GoogleAuthSuccess.jsx";
+import RoleRoute from "./layouts/RoleRoute.jsx";
+
 // Lazy loaded pages
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const Login = lazy(() => import("./pages/Login.jsx"));
@@ -26,6 +29,22 @@ const MainLayout = lazy (()=> import('./layouts/MainLayout.jsx'));
 
 
 export default function App() {
+
+    const{isLoading}= useAuth();
+
+
+
+    if (isLoading) {
+        return (
+            <div className="flex h-screen w-screen flex-col items-center justify-center bg-[#f6faf5]">
+                <div className="h-9 w-9 animate-spin rounded-full border-4 border-green-100 border-t-[#063b2d]" />
+    
+                <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-[#063b2d]">
+                    E-Code Solutions
+                </p>
+            </div>
+        );
+    }
     return (
         <Suspense
             fallback={
@@ -69,18 +88,54 @@ export default function App() {
 
 
                 <Route path="/main" element={<MainLayout />}>
-                    {/* <Route index element={<SalesOrder />} /> */}
-                    <Route path="sales-order" element={<SalesOrder/>}/>
-                    < Route path="userproduct" element={<UserProduct/>}/>
-                    <Route path="addproduct" element={<UserProduct/>}/>
-                    <Route path="addproduct/new" element={<AddProducts />} />
 
 
-            
-                
-                    <Route path="products" element={<Products />} />
-                    <Route path="products/:productId" element={<ProductDetailsInfo />} />
-                    <Route path="invoice-order" element={<InvoiceOrder />} />
+                    {/* User */}
+                    <Route element={<RoleRoute allowedRoles={["User"]} />}>
+
+                        <Route
+                            path="sales-order"
+                            element={<SalesOrder />}
+                        />
+
+                        <Route
+                            path="addproduct"
+                            element={<UserProduct />}
+                        />
+
+                        <Route
+                            path="addproduct/new"
+                            element={<AddProducts />}
+                        />
+                    </Route>
+
+                    {/* Company || Customer */}
+                    <Route
+                        element={
+                            <RoleRoute
+                                allowedRoles={["Company", "Customer"]}
+                            />
+                        }
+                    >
+
+                        <Route
+                            path="products"
+                            element={<Products />}
+                        />
+
+                        <Route
+                            path="products/:productId"
+                            element={<ProductDetailsInfo />}
+                        />
+
+                        <Route
+                            path="invoice-order"
+                            element={<InvoiceOrder />}
+                        />
+
+                    </Route>
+
+                    
                     <Route path="profile" element={<Profile />} />
                 </Route>
                 <Route
