@@ -40,10 +40,16 @@ export function Login() {
 
     const onSubmit =(data)=>{
         loginUser.mutate(data,{
-            onSuccess:()=>{
+            onSuccess:(res)=>{
                 toast.success("Login successful! Welcome back.")
-                navigate("/main")
-            },
+                const user =res.user||res;
+                if (user.role === "User") {
+                    navigate('/main/profile');
+                } else if (user.role==="Company" || user.role==="Customer") {
+                    navigate('/main/profile');
+                } else {
+                    navigate('/');
+                }            },
             onError:(error)=>{
                 toast.error(error.response?.data?.message|| "Login failed. Please try again.")
             }
