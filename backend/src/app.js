@@ -51,6 +51,6 @@ app.use("/api/user",userRoutes);
 
 app.use("/api/order",orderRoutes);
 
-app.use("/api/message",contactRoutes);
+app.use("/api/contact",contactRoutes);
 
 export default app;
