@@ -11,7 +11,6 @@ export const createContactOne = async(req,res)=>{
             message:contact.message
         });
         return contact;
-        
     } catch (error) {
         res.status(400).json({
             error,

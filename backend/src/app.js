@@ -4,6 +4,7 @@ import passport from 'passport';
 import authRoutes from "./module/auth/auth.router.js";
 import userRoutes from "./module/addProduct/add.product.router.js";
 import orderRoutes from './module/order/order.router.js';
+import contactRoutes from './module/contact/contact.router.js';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import "./module/auth/google.strategy.js";
@@ -32,7 +33,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.use(express.json({ limit: "25mb" })); // increase limit to allow base64 images
+app.use(express.json({ limit: "25mb" })); 
 app.use(cookieParser());
 app.use(passport.initialize());
 
@@ -49,5 +50,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/user",userRoutes);
 
 app.use("/api/order",orderRoutes);
+
+app.use("/api/message",contactRoutes);
 
 export default app;

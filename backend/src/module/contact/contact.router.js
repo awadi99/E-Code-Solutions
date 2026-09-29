@@ -4,7 +4,7 @@ import { createContactOne } from "./contact.controller.js";
 
 const router = express.Router();
 
-router.post("/contact",
+router.post("/message",
     createContactOne
 );
 
