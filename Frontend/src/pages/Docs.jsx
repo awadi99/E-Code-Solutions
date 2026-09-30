@@ -13,6 +13,12 @@ import {
 import Input from "@/components/common/ui/Input";
 import Button from "@/components/common/ui/Button";
 import docsData from "../constants/Docs";
+import { useDocs } from '../hook/useDocs.js';
+import { useForm } from "react-hook-form";
+import docsSchema from "../schema/docs.schema.js";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+
 
 const reveal = {
     initial: {
@@ -34,66 +40,89 @@ const reveal = {
 };
 
 export function Docs() {
-    const [data, setData] = useState({
-        name: "",
-        email: "",
-        idea: "",
-    });
+    // const [data, setData] = useState({
+    //     name: "",
+    //     email: "",
+    //     idea: "",
+    // });
 
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
-    const handlingValue = (event) => {
-        const { name, value } = event.target;
+    // const handlingValue = (event) => {
+    //     const { name, value } = event.target;
 
-        setData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    //     setData((prev) => ({
+    //         ...prev,
+    //         [name]: value,
+    //     }));
+    // };
 
-    const SendValue = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+    // const SendValue = async (e) => {
+    //     e.preventDefault();
+    //     setLoading(true);
 
-        try {
-            const res = await fetch(
-                "http://localhost:5000/api/docs",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                }
-            );
+    //     try {
+    //         const res = await fetch(
+    //             "http://localhost:5000/api/docs",
+    //             {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify(data),
+    //             }
+    //         );
 
-            const result = await res.json();
+    //         const result = await res.json();
 
-            if (res.ok) {
-                alert(result.msg);
+    //         if (res.ok) {
+    //             alert(result.msg);
 
-                setData({
-                    name: "",
-                    email: "",
-                    idea: "",
-                });
-            } else {
-                alert(result.msg);
-            }
-        } catch (err) {
-            console.log(err);
-            alert("Something went wrong");
-        } finally {
-            setLoading(false);
-        }
+    //             setData({
+    //                 name: "",
+    //                 email: "",
+    //                 idea: "",
+    //             });
+    //         } else {
+    //             alert(result.msg);
+    //         }
+    //     } catch (err) {
+    //         console.log(err);
+    //         alert("Something went wrong");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+
+
+    // new way 
+
+    const { createDocs } = useDocs();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors }
+    } = useForm({
+        resolver: zodResolver(docsSchema),
+        mode: "onChange"
+    })
+
+
+    const onsubmit = (data) => {
+        createDocs.mutate(data, {
+            onSuccess: (res) => {
+                toast.success("Message submitted successfully");
+                reset();
+            }, onError: (error) => {
+                toast.error("Message submission failed !");
+            },
+        });
     };
 
     return (
         <main className="min-h-screen bg-[#fafcf9] text-[#111814]">
-
-            {/* =====================================================
-                HERO
-            ====================================================== */}
 
             <section className="relative min-h-[82vh] overflow-hidden bg-[#063b2d]">
 
@@ -148,16 +177,12 @@ export function Docs() {
             </section>
 
 
-            {/* =====================================================
-                MAIN CONTENT
-            ====================================================== */}
+
 
             <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
 
 
-                {/* =================================================
-                    IMPORTANCE
-                ================================================== */}
+
 
                 <motion.section
                     {...reveal}
@@ -208,9 +233,6 @@ export function Docs() {
                 </motion.section>
 
 
-                {/* =================================================
-                    FEATURES
-                ================================================== */}
 
                 <motion.section
                     {...reveal}
@@ -278,10 +300,6 @@ export function Docs() {
                 </motion.section>
 
 
-                {/* =================================================
-                    WORKFLOW
-                ================================================== */}
-
                 <motion.section
                     {...reveal}
                     className="mt-32"
@@ -344,9 +362,6 @@ export function Docs() {
                 </motion.section>
 
 
-                {/* =================================================
-                    ROLES
-                ================================================== */}
 
                 <motion.section
                     {...reveal}
@@ -410,9 +425,7 @@ export function Docs() {
                 </motion.section>
 
 
-                {/* =================================================
-                    BENEFITS
-                ================================================== */}
+
 
                 <motion.section
                     {...reveal}
@@ -471,9 +484,7 @@ export function Docs() {
                 </motion.section>
 
 
-                {/* =================================================
-                    CONTACT
-                ================================================== */}
+
 
                 <motion.section
                     {...reveal}
@@ -513,73 +524,100 @@ export function Docs() {
                             {/* Form */}
 
                             <form
-                                onSubmit={SendValue}
-                                className="space-y-6"
+                                onSubmit={handleSubmit(onsubmit)}
+                                className="w-full space-y-7"
                             >
-
-                                <div className="grid gap-6 sm:grid-cols-2">
-
+                                {/* Name + Email */}
+                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                                     <Input
                                         label="Full Name"
-                                        name="name"
-                                        placeholder="Enter your name"
-                                        value={data.name}
-                                        onChange={handlingValue}
+                                        name="fullName"
+                                        placeholder="Enter your full name"
+                                        {...register("fullName")}
+                                        error={errors.fullName?.message}
                                     />
 
                                     <Input
                                         label="Email Address"
                                         type="email"
                                         name="email"
-                                        placeholder="Enter your email"
-                                        value={data.email}
-                                        onChange={handlingValue}
+                                        placeholder="Enter your email address"
+                                        {...register("email")}
+                                        error={errors.email?.message}
                                     />
-
                                 </div>
 
-
-                                <div className="flex flex-col gap-2">
-
-                                    <label className="ml-1 text-[10px] font-black uppercase tracking-[0.2em] text-gray-500">
-                                        Write your idea here
+                                {/* Message / Idea */}
+                                <div className="w-full">
+                                    <label
+                                        htmlFor="idea"
+                                        className="mb-2.5 ml-1 block text-[10px] font-black uppercase tracking-[0.2em] text-slate-500"
+                                    >
+                                        Your Idea
                                     </label>
 
                                     <textarea
+                                        id="idea"
                                         rows={6}
-                                        name="idea"
-                                        value={data.idea}
-                                        onChange={handlingValue}
-                                        required
-                                        placeholder="Share your idea..."
-                                        className="w-full resize-none border-b border-gray-300 bg-transparent px-1 py-3 text-sm text-gray-900 outline-none transition duration-200 placeholder:text-gray-400 focus:border-green-600"
+                                        placeholder="Tell us about your idea..."
+                                        {...register("idea")}
+                                        className={`
+                block
+                w-full
+                resize-none
+                rounded-xl
+                border
+                bg-white
+                px-4
+                py-3.5
+                text-sm
+                leading-6
+                text-slate-900
+                outline-none
+                transition-all
+                duration-200
+
+                placeholder:text-slate-400
+
+                hover:border-slate-300
+
+                focus:ring-4
+
+                ${errors.idea
+                                                ? `
+                            border-red-500
+                            ring-4
+                            ring-red-500/10
+                            focus:border-red-500
+                            focus:ring-red-500/10
+                        `
+                                                : `
+                            border-slate-200
+                            focus:border-green-500
+                            focus:ring-green-500/10
+                        `
+                                            }
+            `}
                                     />
 
+                                    {/* Validation error */}
+                                    {errors.idea?.message && (
+                                        <p className="mt-2 ml-1 text-[10px] font-bold uppercase tracking-wider text-red-500">
+                                            {errors.idea.message}
+                                        </p>
+                                    )}
                                 </div>
 
-
-                                <label className="flex items-center gap-3 text-sm text-gray-600">
-
-                                    <input
-                                        type="checkbox"
-                                        required
-                                        className="h-4 w-4 accent-green-600"
-                                    />
-
-                                    <span>
-                                        I agree to the Terms and Conditions
-                                    </span>
-
-                                </label>
-
-
-                                <Button
-                                    type="submit"
-                                    loading={loading}
-                                >
-                                    Send Your Idea
-                                </Button>
-
+                                {/* Submit */}
+                                <div className="pt-1">
+                                    <Button
+                                        type="submit"
+                                        loading={createDocs.isPending}
+                                        disabled={createDocs.isPending}
+                                    >
+                                        Send Your Idea
+                                    </Button>
+                                </div>
                             </form>
 
                         </div>
@@ -601,7 +639,7 @@ export function Docs() {
 
                     <div className="flex items-center gap-3">
 
-                        <img 
+                        <img
                             src="/image/logo.png"
                             size={18}
                             className="w-5 h-5"
