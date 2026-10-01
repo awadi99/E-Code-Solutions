@@ -1,4 +1,4 @@
-# <img src="https://cdn-icons-png.flaticon.com/512/4478/4478481.png" width="40" alt="Green Earth" /> E-Code Solutions
+# <img src="https://cdn-icons-png.flaticon.com/512/4478/4478481.png" width="40" alt="Green Earth" /> &nbsp;E-Code Solutions
 
 
 
@@ -110,7 +110,7 @@ E-Code-Solutions/
 │       ├── index.css
 │       └── main.jsx
 │
-├── Backend/
+├── backend/
 │   ├── src/
 │   │   ├── config/
 │   │   ├── middleware/
