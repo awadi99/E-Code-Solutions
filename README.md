@@ -2,6 +2,7 @@
 
 
 
+
 E-Code Solutions is a full-stack e-waste management platform built using the MERN stack. It connects individuals, customers, and companies to support the responsible collection, reuse, resale, and recycling of electronic waste.
 
 The platform allows users to list electronic products, explore available products, and connect with other participants through a role-based system.
